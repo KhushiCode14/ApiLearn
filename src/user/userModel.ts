@@ -1,8 +1,8 @@
 // import { timeStamp } from "console";
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { User } from "./userTypes";
 // schema define
-const userSchema = new mongoose.Schema<User>(
+const userSchema = new Schema<User>(
     {
         name: {
             type: String,
@@ -20,14 +20,6 @@ const userSchema = new mongoose.Schema<User>(
         role: {
             type: String,
             default: "user",
-        },
-        created_at: {
-            type: Date,
-            default: Date.now,
-        },
-        updated_at: {
-            type: Date,
-            default: Date.now,
         },
     },
     { timestamps: true }
