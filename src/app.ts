@@ -5,6 +5,7 @@ import bookRouter from "./book/bookRouter";
 // import globalErrorHandler from "./middlewares/globalErrorHandle";
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // routes
 // http methods
 app.get("/", (_req, res) => {
