@@ -168,5 +168,22 @@ const listBook = async (req: Request, res: Response, next: NextFunction) => {
         return next(createHttpError(500, "Error while getting books "));
     }
 };
+const getSingleBook = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const bookId = req.params.bookId;
+    try {
+        const book = await Book.findById(bookId);
 
-export { createBook, updateBook, listBook };
+        if (!book) {
+            return next(createHttpError(404, "Book not found"));
+        }
+        res.json(book);
+    } catch {
+        return next(createHttpError(500, "Error while getting books "));
+    }
+};
+
+export { createBook, updateBook, listBook, getSingleBook };
