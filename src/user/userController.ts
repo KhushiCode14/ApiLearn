@@ -8,10 +8,14 @@ import { config } from "../config/config";
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, password } = req.body;
 
-    // Validation
-    if (!email || !password || !name) {
-        const error = createHttpError(400, "Fields are required");
-        return next(error);
+    try {
+        // Validation
+        if (!email || !password || !name) {
+            const error = createHttpError(400, "Fields are required");
+            return next(error);
+        }
+    } catch (error) {
+        return next(createHttpError(error));
     }
 
     // Check if user already exists
