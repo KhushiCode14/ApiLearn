@@ -15,7 +15,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
             return next(error);
         }
     } catch (error) {
-        return next(createHttpError(error));
+        return next(console.log(error));
     }
 
     // Check if user already exists
@@ -45,4 +45,38 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
     res.json({ accessToken: token });
 };
 
-export { createUser };
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+
+    try {
+        if (!email || !password) {
+            return next(
+                createHttpError(400, "Email and password are required")
+            );
+        }
+
+        // Find the user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return next(createHttpError(404, "User  not found"));
+        }
+
+        // Check the password
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+            return next(createHttpError(401, "Invalid password"));
+        }
+
+        // Generate a token
+        const token = sign({ sub: user._id }, config.jwtSecret as string, {
+            expiresIn: "2d",
+            algorithm: "HS256",
+        });
+
+        // Respond with the token
+        res.json({ accessToken: token });
+    } catch {
+        return next(createHttpError(500, "Internal server error"));
+    }
+};
+export { createUser, loginUser };
